@@ -20,8 +20,6 @@ func New(repo repository.Repository, secret string, expiryHours int) *Service {
 	return &Service{repo: repo, jwtSecret: secret, jwtExpiry: time.Duration(expiryHours) * time.Hour}
 }
 
-// ── Auth ──────────────────────────────────────────────────────
-
 func (s *Service) Login(req models.LoginRequest) (*models.LoginResponse, error) {
 	u, err := s.repo.GetUserByEmail(req.Email)
 	if err != nil {
@@ -65,8 +63,6 @@ func (s *Service) ParseToken(tok string) (*models.Claims, error) {
 	}, nil
 }
 
-// ── Users ─────────────────────────────────────────────────────
-
 func (s *Service) GetAllUsers() ([]models.User, error)      { return s.repo.GetAllUsers() }
 func (s *Service) GetUserByID(id int) (*models.User, error) { return s.repo.GetUserByID(id) }
 
@@ -86,8 +82,6 @@ func (s *Service) UpdateUser(id int, req models.UserUpdateRequest) (*models.User
 
 func (s *Service) DeleteUser(id int) error { return s.repo.DeleteUser(id) }
 
-// ── Ships ─────────────────────────────────────────────────────
-
 func (s *Service) GetAllShips() ([]models.Ship, error)      { return s.repo.GetAllShips() }
 func (s *Service) GetShipByID(id int) (*models.Ship, error) { return s.repo.GetShipByID(id) }
 
@@ -106,8 +100,6 @@ func (s *Service) UpdateShip(id int, req models.ShipUpdateRequest) (*models.Ship
 }
 
 func (s *Service) DeleteShip(id int) error { return s.repo.DeleteShip(id) }
-
-// ── Visits ────────────────────────────────────────────────────
 
 func (s *Service) GetAllVisits() ([]models.Visit, error)      { return s.repo.GetAllVisits() }
 func (s *Service) GetVisitByID(id int) (*models.Visit, error) { return s.repo.GetVisitByID(id) }

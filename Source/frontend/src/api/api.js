@@ -2,13 +2,13 @@ const BASE = '/api'
 const TOKEN_KEY = 'harbor_token'
 const USER_KEY  = 'harbor_user'
 
-// LocalStorage helpers
+
 export const saveAuth  = (token, user) => { localStorage.setItem(TOKEN_KEY, token); localStorage.setItem(USER_KEY, JSON.stringify(user)) }
 export const clearAuth = () => { localStorage.removeItem(TOKEN_KEY); localStorage.removeItem(USER_KEY) }
 export const getToken  = () => localStorage.getItem(TOKEN_KEY)
 export const getUser   = () => { const r = localStorage.getItem(USER_KEY); return r ? JSON.parse(r) : null }
 
-// HTTP
+
 const req = async (method, path, body) => {
   const headers = { 'Content-Type': 'application/json' }
   const token = getToken()
@@ -20,25 +20,25 @@ const req = async (method, path, body) => {
   return data
 }
 
-// Auth
+
 export const login   = (email, password) => req('POST', '/auth/login', { email, password })
 export const getMe   = () => req('GET', '/me')
 
-// Users
+
 export const getUsers    = ()       => req('GET',    '/users')
 export const getUserById = (id)     => req('GET',    `/users/${id}`)
 export const createUser  = (data)   => req('POST',   '/users',    data)
 export const updateUser  = (id, d)  => req('PUT',    `/users/${id}`, d)
 export const deleteUser  = (id)     => req('DELETE', `/users/${id}`)
 
-// Ships
+
 export const getShips    = ()       => req('GET',    '/ships')
 export const getShipById = (id)     => req('GET',    `/ships/${id}`)
 export const createShip  = (data)   => req('POST',   '/ships',    data)
 export const updateShip  = (id, d)  => req('PUT',    `/ships/${id}`, d)
 export const deleteShip  = (id)     => req('DELETE', `/ships/${id}`)
 
-// Visits
+
 export const getVisits    = ()       => req('GET',    '/visits')
 export const getVisitById = (id)     => req('GET',    `/visits/${id}`)
 export const createVisit  = (data)   => req('POST',   '/visits',    data)

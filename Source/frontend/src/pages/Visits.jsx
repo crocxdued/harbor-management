@@ -8,7 +8,7 @@ const ST_LBL = { planned:'Запланирован', active:'Активен', co
 const ST_CLS = { planned:s.sPlanned, active:s.sActive, completed:s.sDone, cancelled:s.sCancelled }
 const STATUSES = ['planned','active','completed','cancelled']
 
-// Причалы захардкожены — они есть в БД, но не имеют отдельного CRUD в API
+
 const BERTHS = [
   {id:1,label:'A-01 — грузовой'},
   {id:2,label:'A-02 — грузовой'},
@@ -24,7 +24,7 @@ export default function Visits() {
   const [ships,  setShips]  = useState([])
   const [busy,   setBusy]   = useState(true)
   const [err,    setErr]    = useState('')
-  const [modal,  setModal]  = useState(null) // 'create' | 'status'
+  const [modal,  setModal]  = useState(null) 
   const [sel,    setSel]    = useState(null)
   const [form,   setForm]   = useState({ ship_id:'', berth_id:'1', arrival_time:'', purpose:'' })
   const [stForm, setStForm] = useState({ status:'active', departure_time:'' })

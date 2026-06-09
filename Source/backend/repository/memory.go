@@ -53,31 +53,45 @@ func (r *MemoryRepository) seed() {
 	r.visitSeq = 2
 }
 
-// ── Users ────────────────────────────────────────────────────
-
 func (r *MemoryRepository) GetAllUsers() ([]models.User, error) {
-	r.mu.RLock(); defer r.mu.RUnlock()
+	r.mu.RLock()
+	defer r.mu.RUnlock()
 	out := make([]models.User, 0, len(r.users))
-	for _, u := range r.users { out = append(out, *u) }
+	for _, u := range r.users {
+		out = append(out, *u)
+	}
 	return out, nil
 }
 
 func (r *MemoryRepository) GetUserByID(id int) (*models.User, error) {
-	r.mu.RLock(); defer r.mu.RUnlock()
+	r.mu.RLock()
+	defer r.mu.RUnlock()
 	u, ok := r.users[id]
-	if !ok { return nil, errors.New("пользователь не найден") }
+	if !ok {
+		return nil, errors.New("пользователь не найден")
+	}
 	return u, nil
 }
 
 func (r *MemoryRepository) GetUserByEmail(email string) (*models.User, error) {
-	r.mu.RLock(); defer r.mu.RUnlock()
-	for _, u := range r.users { if u.Email == email { return u, nil } }
+	r.mu.RLock()
+	defer r.mu.RUnlock()
+	for _, u := range r.users {
+		if u.Email == email {
+			return u, nil
+		}
+	}
 	return nil, errors.New("пользователь не найден")
 }
 
 func (r *MemoryRepository) CreateUser(u *models.User) (*models.User, error) {
-	r.mu.Lock(); defer r.mu.Unlock()
-	for _, x := range r.users { if x.Email == u.Email { return nil, errors.New("email уже занят") } }
+	r.mu.Lock()
+	defer r.mu.Unlock()
+	for _, x := range r.users {
+		if x.Email == u.Email {
+			return nil, errors.New("email уже занят")
+		}
+	}
 	r.userSeq++
 	u.ID = r.userSeq
 	u.CreatedAt = time.Now()
@@ -86,41 +100,62 @@ func (r *MemoryRepository) CreateUser(u *models.User) (*models.User, error) {
 }
 
 func (r *MemoryRepository) UpdateUser(id int, upd *models.User) (*models.User, error) {
-	r.mu.Lock(); defer r.mu.Unlock()
+	r.mu.Lock()
+	defer r.mu.Unlock()
 	u, ok := r.users[id]
-	if !ok { return nil, errors.New("пользователь не найден") }
-	if upd.Name != "" { u.Name = upd.Name }
-	if upd.Role != "" { u.Role = upd.Role }
-	if upd.Age != nil { u.Age = upd.Age }
+	if !ok {
+		return nil, errors.New("пользователь не найден")
+	}
+	if upd.Name != "" {
+		u.Name = upd.Name
+	}
+	if upd.Role != "" {
+		u.Role = upd.Role
+	}
+	if upd.Age != nil {
+		u.Age = upd.Age
+	}
 	return u, nil
 }
 
 func (r *MemoryRepository) DeleteUser(id int) error {
-	r.mu.Lock(); defer r.mu.Unlock()
-	if _, ok := r.users[id]; !ok { return errors.New("пользователь не найден") }
+	r.mu.Lock()
+	defer r.mu.Unlock()
+	if _, ok := r.users[id]; !ok {
+		return errors.New("пользователь не найден")
+	}
 	delete(r.users, id)
 	return nil
 }
 
-// ── Ships ────────────────────────────────────────────────────
-
 func (r *MemoryRepository) GetAllShips() ([]models.Ship, error) {
-	r.mu.RLock(); defer r.mu.RUnlock()
+	r.mu.RLock()
+	defer r.mu.RUnlock()
 	out := make([]models.Ship, 0, len(r.ships))
-	for _, s := range r.ships { out = append(out, *s) }
+	for _, s := range r.ships {
+		out = append(out, *s)
+	}
 	return out, nil
 }
 
 func (r *MemoryRepository) GetShipByID(id int) (*models.Ship, error) {
-	r.mu.RLock(); defer r.mu.RUnlock()
+	r.mu.RLock()
+	defer r.mu.RUnlock()
 	s, ok := r.ships[id]
-	if !ok { return nil, errors.New("судно не найдено") }
+	if !ok {
+		return nil, errors.New("судно не найдено")
+	}
 	return s, nil
 }
 
 func (r *MemoryRepository) CreateShip(s *models.Ship) (*models.Ship, error) {
-	r.mu.Lock(); defer r.mu.Unlock()
-	for _, x := range r.ships { if x.IMONumber == s.IMONumber { return nil, errors.New("номер ИМО уже существует") } }
+	r.mu.Lock()
+	defer r.mu.Unlock()
+	for _, x := range r.ships {
+		if x.IMONumber == s.IMONumber {
+			return nil, errors.New("номер ИМО уже существует")
+		}
+	}
 	r.shipSeq++
 	s.ID = r.shipSeq
 	s.CreatedAt = time.Now()
@@ -129,70 +164,107 @@ func (r *MemoryRepository) CreateShip(s *models.Ship) (*models.Ship, error) {
 }
 
 func (r *MemoryRepository) UpdateShip(id int, upd *models.Ship) (*models.Ship, error) {
-	r.mu.Lock(); defer r.mu.Unlock()
+	r.mu.Lock()
+	defer r.mu.Unlock()
 	s, ok := r.ships[id]
-	if !ok { return nil, errors.New("судно не найдено") }
-	if upd.Name != ""        { s.Name = upd.Name }
-	if upd.ShipType != ""    { s.ShipType = upd.ShipType }
-	if upd.FlagCountry != "" { s.FlagCountry = upd.FlagCountry }
-	if upd.GrossTonnage > 0  { s.GrossTonnage = upd.GrossTonnage }
-	if upd.YearBuilt > 0     { s.YearBuilt = upd.YearBuilt }
+	if !ok {
+		return nil, errors.New("судно не найдено")
+	}
+	if upd.Name != "" {
+		s.Name = upd.Name
+	}
+	if upd.ShipType != "" {
+		s.ShipType = upd.ShipType
+	}
+	if upd.FlagCountry != "" {
+		s.FlagCountry = upd.FlagCountry
+	}
+	if upd.GrossTonnage > 0 {
+		s.GrossTonnage = upd.GrossTonnage
+	}
+	if upd.YearBuilt > 0 {
+		s.YearBuilt = upd.YearBuilt
+	}
 	return s, nil
 }
 
 func (r *MemoryRepository) DeleteShip(id int) error {
-	r.mu.Lock(); defer r.mu.Unlock()
-	if _, ok := r.ships[id]; !ok { return errors.New("судно не найдено") }
+	r.mu.Lock()
+	defer r.mu.Unlock()
+	if _, ok := r.ships[id]; !ok {
+		return errors.New("судно не найдено")
+	}
 	delete(r.ships, id)
 	return nil
 }
 
-// ── Visits ───────────────────────────────────────────────────
-
 func (r *MemoryRepository) GetAllVisits() ([]models.Visit, error) {
-	r.mu.RLock(); defer r.mu.RUnlock()
+	r.mu.RLock()
+	defer r.mu.RUnlock()
 	out := make([]models.Visit, 0, len(r.visits))
 	for _, v := range r.visits {
 		vv := *v
-		if s, ok := r.ships[v.ShipID]; ok { vv.ShipName = s.Name }
+		if s, ok := r.ships[v.ShipID]; ok {
+			vv.ShipName = s.Name
+		}
 		out = append(out, vv)
 	}
 	return out, nil
 }
 
 func (r *MemoryRepository) GetVisitByID(id int) (*models.Visit, error) {
-	r.mu.RLock(); defer r.mu.RUnlock()
+	r.mu.RLock()
+	defer r.mu.RUnlock()
 	v, ok := r.visits[id]
-	if !ok { return nil, errors.New("визит не найден") }
+	if !ok {
+		return nil, errors.New("визит не найден")
+	}
 	vv := *v
-	if s, ok := r.ships[v.ShipID]; ok { vv.ShipName = s.Name }
+	if s, ok := r.ships[v.ShipID]; ok {
+		vv.ShipName = s.Name
+	}
 	return &vv, nil
 }
 
 func (r *MemoryRepository) CreateVisit(v *models.Visit) (*models.Visit, error) {
-	r.mu.Lock(); defer r.mu.Unlock()
-	if _, ok := r.ships[v.ShipID]; !ok { return nil, errors.New("судно не найдено") }
+	r.mu.Lock()
+	defer r.mu.Unlock()
+	if _, ok := r.ships[v.ShipID]; !ok {
+		return nil, errors.New("судно не найдено")
+	}
 	r.visitSeq++
 	v.ID = r.visitSeq
 	v.Status = "planned"
 	v.CreatedAt = time.Now()
-	if s, ok := r.ships[v.ShipID]; ok { v.ShipName = s.Name }
+	if s, ok := r.ships[v.ShipID]; ok {
+		v.ShipName = s.Name
+	}
 	r.visits[v.ID] = v
 	return v, nil
 }
 
 func (r *MemoryRepository) UpdateVisit(id int, upd *models.Visit) (*models.Visit, error) {
-	r.mu.Lock(); defer r.mu.Unlock()
+	r.mu.Lock()
+	defer r.mu.Unlock()
 	v, ok := r.visits[id]
-	if !ok { return nil, errors.New("визит не найден") }
-	if upd.Status != ""        { v.Status = upd.Status }
-	if upd.DepartureTime != nil { v.DepartureTime = upd.DepartureTime }
+	if !ok {
+		return nil, errors.New("визит не найден")
+	}
+	if upd.Status != "" {
+		v.Status = upd.Status
+	}
+	if upd.DepartureTime != nil {
+		v.DepartureTime = upd.DepartureTime
+	}
 	return v, nil
 }
 
 func (r *MemoryRepository) DeleteVisit(id int) error {
-	r.mu.Lock(); defer r.mu.Unlock()
-	if _, ok := r.visits[id]; !ok { return errors.New("визит не найден") }
+	r.mu.Lock()
+	defer r.mu.Unlock()
+	if _, ok := r.visits[id]; !ok {
+		return errors.New("визит не найден")
+	}
 	delete(r.visits, id)
 	return nil
 }

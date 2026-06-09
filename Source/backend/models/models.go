@@ -2,8 +2,6 @@ package models
 
 import "time"
 
-// ── User ──────────────────────────────────────────────────────
-
 type User struct {
 	ID        int       `json:"id"`
 	Name      string    `json:"name"`
@@ -27,8 +25,6 @@ type UserUpdateRequest struct {
 	Role string `json:"role" binding:"omitempty,oneof=admin dispatcher operator"`
 	Age  *int   `json:"age"`
 }
-
-// ── Ship ──────────────────────────────────────────────────────
 
 type Ship struct {
 	ID           int       `json:"id"`
@@ -58,8 +54,6 @@ type ShipUpdateRequest struct {
 	YearBuilt    int    `json:"year_built"`
 }
 
-// ── Visit ─────────────────────────────────────────────────────
-
 type Visit struct {
 	ID            int        `json:"id"`
 	ShipID        int        `json:"ship_id"`
@@ -69,7 +63,7 @@ type Visit struct {
 	Status        string     `json:"status"`
 	Purpose       string     `json:"purpose"`
 	CreatedAt     time.Time  `json:"created_at"`
-	// обогащённые поля для ответа
+
 	ShipName    string `json:"ship_name,omitempty"`
 	BerthNumber string `json:"berth_number,omitempty"`
 }
@@ -86,8 +80,6 @@ type VisitUpdateRequest struct {
 	DepartureTime *time.Time `json:"departure_time"`
 }
 
-// ── Auth ──────────────────────────────────────────────────────
-
 type LoginRequest struct {
 	Email    string `json:"email"    binding:"required,email"`
 	Password string `json:"password" binding:"required"`
@@ -103,8 +95,6 @@ type Claims struct {
 	Email  string
 	Role   string
 }
-
-// ── Common ────────────────────────────────────────────────────
 
 type ErrorResponse struct {
 	Error string `json:"error"`
